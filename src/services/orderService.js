@@ -85,8 +85,6 @@ exports.getAverageProcessingTime = async () => {
   }
 };
 
-=======
->>>>>>> main
 // Get the count of orders in each status (Pending, Processing, Completed)
 exports.getOrderCountsByStatus = () => {
   return new Promise((resolve, reject) => {
