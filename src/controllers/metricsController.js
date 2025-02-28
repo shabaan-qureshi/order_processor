@@ -3,7 +3,10 @@ const orderService = require('../services/orderService');
 exports.getMetrics = async (req, res) => {
   try {
     const totalOrders = await orderService.getTotalOrders();
+<<<<<<< HEAD
     const averageProcessingTime = await orderService.getAverageProcessingTime();
+=======
+>>>>>>> main
     const orderCounts = await orderService.getOrderCountsByStatus();
 
     const metrics = {
