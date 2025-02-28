@@ -1,0 +1,26 @@
+{
+  "name": "order_processor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "api": "node ./src/app.js",
+    "eslint": "eslint . --fix --cache",
+    "tdd": "jest --watch",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bull": "^4.16.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "queue": "^7.0.0",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  }
+}
