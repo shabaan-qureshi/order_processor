@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "api": "node ./src/app.js",
+    "db": "node ./src/scripts/createDb.js",
     "eslint": "eslint . --fix --cache",
     "tdd": "jest --watch",
     "test": "jest"

@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS orders (
   total_amount REAL NOT NULL,
   status TEXT NOT NULL CHECK(status IN ('Pending', 'Processing', 'Completed')),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  completed_at DATETIME CURRENT_TIMESTAMP
+  completed_at DATETIME
 );
