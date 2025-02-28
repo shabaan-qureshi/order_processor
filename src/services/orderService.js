@@ -64,6 +64,27 @@ exports.getTotalOrders = () => {
   });
 };
 
+// Get the average processing time for orders
+exports.getAverageProcessingTime = async () => {
+  try {
+    const result = await db.get(`
+       SELECT AVG(JULIANDAY(completed_at) - JULIANDAY(created_at)) AS avg_processing_time
+      FROM orders
+      WHERE status = 'Completed'
+    `);
+    
+    // Ensure that 'result' contains the expected structure
+    if (result.rows && result.rows[0]) {
+      return { avg_processing_time: result.rows[0].avg_processing_time_days };
+    } else {
+      throw new Error('No completed orders found');
+    }
+  } catch (error) {
+    console.error(error);
+    return { error: error.message };
+  }
+};
+
 // Get the count of orders in each status (Pending, Processing, Completed)
 exports.getOrderCountsByStatus = () => {
   return new Promise((resolve, reject) => {
