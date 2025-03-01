@@ -48,25 +48,31 @@ exports.getTotalOrders = () => {
   });
 };
 
-exports.getAverageProcessingTime = async () => {
-  try {
-    const result = await db.get(`
-      SELECT AVG(strftime('%s', completed_at) - strftime('%s', created_at)) AS avg_processing_time
+// Get the average processing time of orders
+exports.getAverageProcessingTime = () => {
+  return new Promise((resolve, reject) => {
+    db.get(`
+      SELECT AVG(
+        (strftime('%s', completed_at) - strftime('%s', created_at))
+      ) AS avg_processing_time
       FROM orders
-      WHERE status = 'Completed' AND completed_at IS NOT NULL`);
-
-    if (result && result.avg_processing_time !== null) {
-      return { avg_processing_time: result.avg_processing_time };
-    } else {
-      throw new Error('No completed orders found or result is invalid');
-    }
-  } catch (error) {
-    console.error("Error fetching average processing time:", error);
-    return { error: error.message };
-  }
+      WHERE completed_at IS NOT NULL;
+    `, [], (err, result) => {
+      if (err) {
+        console.error("Error fetching average processing time:", err);
+        reject(err); // Reject the promise if there's an error
+      } else {
+        // Check if the result is null and handle accordingly
+        if (result && result.avg_processing_time !== null) {
+          resolve({ avg_processing_time: result.avg_processing_time });
+        } else {
+          // If no completed orders, return 0
+          resolve({ avg_processing_time: 0 });
+        }
+      }
+    });
+  });
 };
-
-
 
 
 
