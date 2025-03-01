@@ -2,18 +2,15 @@ const request = require('supertest');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const orderRoutes = require('../src/routes/orderRoutes');
-const orderService = require('../src/services/orderService');
+const orderRoutes = require('../../src/routes/orderRoutes')
+const orderService = require('../../src/services/orderService');
 
-// Mock the orderService.createOrder method
-jest.mock('../src/services/orderService.js');
+jest.mock('../../src/services/orderService.js');
 
-// Middleware to parse JSON body
 app.use(bodyParser.json());
 
 app.use(orderRoutes);
 
-// Test suite for the createOrder endpoint
 describe('POST /orders', () => {
   it('should create an order and return the order details', async () => {
     const newOrder = {
@@ -27,7 +24,6 @@ describe('POST /orders', () => {
       status: 'Pending',
     };
 
-    // Mock the createOrder method to return the mock response
     orderService.createOrder.mockResolvedValue(mockOrderResponse);
 
     const response = await request(app)
@@ -35,7 +31,6 @@ describe('POST /orders', () => {
       .send(newOrder)
       .expect(201);
 
-    // Assert
     expect(response.body).toEqual(mockOrderResponse);
     console.log(response.body)
     expect(response.body.order_id).toBeDefined();
@@ -56,13 +51,11 @@ describe('POST /orders', () => {
 
     orderService.createOrder.mockRejectedValue(new Error('Database error'));
 
-    // Act
     const response = await request(app)
       .post('/orders')
       .send(newOrder)
       .expect(500);
 
-    // Assert
     expect(response.body.error).toBe('Error creating order');
   });
 });
