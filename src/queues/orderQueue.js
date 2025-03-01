@@ -7,7 +7,7 @@ const orderQueue = async.queue(async (order) => {
   try {
     console.log(`Processing order ${order.order_id}`);
 
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     await order_service.updateOrderStatusToCompleted(order.order_id);
 
     console.log(`Order ${order.order_id} processed successfully`);
