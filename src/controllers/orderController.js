@@ -1,9 +1,17 @@
 const orderService = require('../services/orderService');
+const orderQueue = require('../queues/orderQueue'); 
 
 exports.createOrder = async (req, res) => {
   try {
     const { user_id, item_ids, total_amount } = req.body;
     const order = await orderService.createOrder(user_id, item_ids, total_amount);
+
+    orderQueue.push(order, (err) => {
+      if (err) {
+        console.error('Order processing failed', err);
+      }
+    });
+
     res.status(201).json(order);  
   } catch (error) {
     console.error('Error creating order:', error);  
