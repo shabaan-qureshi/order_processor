@@ -18,22 +18,6 @@ exports.createOrder = (user_id, item_ids, total_amount) => {
   });
 };
 
-// exports.getOrder = (order_id) => {
-//   return new Promise((resolve, reject) => {
-//     const query = 'SELECT * FROM orders WHERE order_id = ?';
-    
-//     db.get(query, [order_id], (err, row) => {
-//       if (err) {
-//         reject(err);  
-//       } else if (row) {
-//         resolve(row.status);  
-//       } else {
-//         resolve(null);  
-//       }
-//     });
-//   });
-// };
-
 exports.getOrderStatus = (order_id) => {
   return new Promise((resolve, reject) => {
     const query = 'SELECT status FROM orders WHERE order_id = ?';
@@ -64,26 +48,27 @@ exports.getTotalOrders = () => {
   });
 };
 
-// Get the average processing time for orders
 exports.getAverageProcessingTime = async () => {
   try {
     const result = await db.get(`
-       SELECT AVG(JULIANDAY(completed_at) - JULIANDAY(created_at)) AS avg_processing_time
+      SELECT AVG(strftime('%s', completed_at) - strftime('%s', created_at)) AS avg_processing_time
       FROM orders
-      WHERE status = 'Completed'
-    `);
-    
-    // Ensure that 'result' contains the expected structure
-    if (result.rows && result.rows[0]) {
-      return { avg_processing_time: result.rows[0].avg_processing_time_days };
+      WHERE status = 'Completed' AND completed_at IS NOT NULL`);
+
+    if (result && result.avg_processing_time !== null) {
+      return { avg_processing_time: result.avg_processing_time };
     } else {
-      throw new Error('No completed orders found');
+      throw new Error('No completed orders found or result is invalid');
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching average processing time:", error);
     return { error: error.message };
   }
 };
+
+
+
+
 
 // Get the count of orders in each status (Pending, Processing, Completed)
 exports.getOrderCountsByStatus = () => {
@@ -112,3 +97,26 @@ exports.getOrderCountsByStatus = () => {
     });
   });
 };
+
+
+// Function to update order status to 'Completed' and set completed_at
+exports.updateOrderStatusToCompleted = async (order_id) => {
+  const updateQuery = `
+    UPDATE orders
+    SET status = 'Completed', completed_at = CURRENT_TIMESTAMP
+    WHERE order_id = ?`;
+  
+  try {
+    await new Promise((resolve, reject) => {
+      db.run(updateQuery, [order_id], (err) => {
+        if (err) reject(err);
+        resolve();
+      });
+    });
+    console.log(`Order ${order_id} marked as completed.`);
+  } catch (error) {
+    console.error('Error updating order status:', error);
+  }
+};
+
+

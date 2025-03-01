@@ -17,11 +17,11 @@ db.serialize(() => {
 
   console.log('Orders table created or exists.');
 
-  const orderId = 'order123';  // Example order ID
-  const userId = 'user456';    // Example user ID
-  const itemIds = '["item1", "item2"]';  // Example item IDs in JSON format
-  const totalAmount = 150.75;  // Example total amount
-  const status = 'Pending';  // Example status
+  const orderId = 'order123';  
+  const userId = 'user456';    
+  const itemIds = '["item1", "item2"]';  
+  const totalAmount = 150.75;  
+  const status = 'Pending';  
 
   db.run(`
     INSERT INTO orders (order_id, user_id, item_ids, total_amount, status)
@@ -35,5 +35,4 @@ db.serialize(() => {
   });
 });
 
-// Close the database connection
 db.close();
