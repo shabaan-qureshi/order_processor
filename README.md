@@ -124,15 +124,21 @@ curl http://localhost:3000/metrics
 ## Assumptions
 - The transition of an order from "Pending" to "Completed" is assumed to take one second, but actual time may vary based on system load, database performance, external services, queue processing, network latency, and retries.
 
-- We assume requests will mostly succeed, with minimal error handling in place. In reality, we’d need to check for invalid parameters and handle errors more robustly like retries.
+- The async.queue concurrency is set to 10, assuming the system can handle 10 parallel orders efficiently. This limit may need to be tuned based on system performance tests.
+
+- We assume requests will mostly succeed, with minimal error handling in place. In reality, we’d need to check the request parameters and handle errors more robustly like retries.
 
 - No rate limiting, authentication, or authorization are implemented, but these would be necessary for production to secure APIs and ensure fair usage.
 
 - The system assumes small traffic and uses a single server and database, but for higher loads, horizontal scaling and database optimization will be necessary.
 
-- Data duplication is not an issue for the current scope of the application, as the system is designed for smaller traffic and minimal complexity.
+- The system assumes clients do not send duplicate orders. Implementing idempotency keys would prevent accidental duplicate orders.
 
 - No need for integration or additional unit tests to further test the application at this stage
+
+- No need for pagination 
+
+
 
 
 
