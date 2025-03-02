@@ -11,7 +11,7 @@ exports.createOrder = async (req, res) => {
         console.error('Order processing failed', err);
       }
     });
-
+    console.log(order)
     res.status(201).json(order);  
   } catch (error) {
     console.error('Error creating order:', error);  
@@ -19,21 +19,11 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-exports.getOrder = async (req, res) => {
-  try {
-    const { order_id } = req.params;
-    const status = await orderService.getOrder(order_id);
-    res.status(200).json({ status });
-  } catch (error) {
-    res.status(500).json({ error: 'Error retrieving order details' });
-  }
-};
-
-
 exports.getOrderStatus = async (req, res) => {
   try {
     const { order_id } = req.params;
     const status = await orderService.getOrderStatus(order_id);
+    console.log(status)
     res.status(200).json({ status });
   } catch (error) {
     res.status(500).json({ error: 'Error retrieving order status' });

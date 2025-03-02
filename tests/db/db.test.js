@@ -30,11 +30,11 @@ describe('Database Operations', () => {
 
   it('should return average processing time', async () => {
     mockDb.get.mockImplementation((query, params, callback) => {
-      callback(null, { avg_processing_time: 120.45 });
+      callback(null, { avg_processing_time: 120.45 }); 
     });
-
+  
     const result = await getAverageProcessingTime();
-    expect(result.avg_processing_time).toBe(120.45);
+    expect(result).toBe(120.45);
     expect(mockDb.get).toHaveBeenCalledWith(
       expect.stringContaining('SELECT AVG'),
       [],
