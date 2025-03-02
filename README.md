@@ -15,7 +15,7 @@ git clone https://github.com/shabaan-qureshi/order_processor.git
 cd order_processor
 
 # Install dependencies
-First, download and install Node.js as per your operation system: [Node.js Download](https://nodejs.org/en/download) 
+First, download and install Node.js as per your operation system: https://nodejs.org/en/download
 
 After installing Node.js, navigate to the project directory in your terminal and install the required dependencies:
 
