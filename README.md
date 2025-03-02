@@ -1,6 +1,6 @@
 # Order Processing API
 
-This backend system manages and processes orders for an e-commerce platform. It provides RESTful APIs for order creation, status checking, and key metrics reporting (total orders, processing time, and order counts by status)
+This backend system manages and processes orders for an e-commerce platform. It provides RESTful APIs for order creation, status checking, and key metrics reporting (total orders, average processing time, and order counts by status)
 
 ## Setup and Running the Application
 
