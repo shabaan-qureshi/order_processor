@@ -1,22 +1,38 @@
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./orders.db');
 
-exports.createOrder = (user_id, item_ids, total_amount) => {
+exports.createOrder = (req, res) => {
+  const { user_id, item_ids, total_amount } = req.body;
   return new Promise((resolve, reject) => {
-    const order_id = 'ORD' + Math.random().toString(36).substring(2, 15).toUpperCase();
-    const status = 'Pending';
-    const item_ids_string = JSON.stringify(item_ids); // Convert array to string
+    if (!user_id || !item_ids || !total_amount) {
+      return reject({ status: 400, error: 'Missing required fields: user_id, item_ids, and total_amount are required' });
+    }
 
-    const query = 'INSERT INTO orders (order_id, user_id, item_ids, total_amount, status) VALUES (?, ?, ?, ?, ?)';
-    db.run(query, [order_id, user_id, item_ids_string, total_amount, status], function(err) {
-      if (err) {
-        reject(err); 
-      } else {
-        resolve({ order_id, status });  
-      }
-    });
+    if (!Array.isArray(item_ids) || item_ids.length === 0) {
+      return reject({ status: 400, error: 'item_ids must be a non-empty array' });
+    }
+
+    if (typeof total_amount !== 'number' || total_amount <= 0) {
+      return reject({ status: 400, error: 'total_amount must be a positive number' });
+    }
+
+    orderService.createOrder(user_id, item_ids, total_amount)
+      .then(order => {
+        orderQueue.push(order, (err) => {
+          if (err) {
+            console.error('Order processing failed:', err);
+          }
+        });
+
+        resolve(order);  
+      })
+      .catch(err => {
+        reject({ status: 500, error: 'Internal server error while creating order', details: err });
+      });
   });
 };
+
+
 
 exports.getOrderStatus = (order_id) => {
   return new Promise((resolve, reject) => {
