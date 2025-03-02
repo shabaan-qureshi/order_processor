@@ -15,31 +15,23 @@ git clone https://github.com/shabaan-qureshi/order_processor.git
 cd order_processor
 
 # Install dependencies
-First, download and install Node.js (https://nodejs.org/en/download) for your operating system.
+First, download and install Node.js as per your operation system: [Node.js Download](https://nodejs.org/en/download) 
 
 After installing Node.js, navigate to the project directory in your terminal and install the required dependencies:
 
 npm install
 
 # Verifiy installations
-Ensure that Node.js and npm are correctly installed by running the following commands:
-
 node -v
 npm -v
 
 # Seed the database
-To populate the database with initial data, run the following command:
-
 npm run db
 
 # Start the API serve
-Now, start the API server with the following command:
-
 npm run api
 
 # Run unit tests 
-To run the unit tests and verify the functionality of the application, execute:
-
 npm run tdd
 ```
 
@@ -103,21 +95,29 @@ curl http://localhost:3000/metrics
 ```
 
 ## Design Decisions and Trade-offs
-- **Queue System:** async module's queue (https://caolan.github.io/async/v3/docs.html#queue) is used for handling multiple orders concurrently, but in production, we will use Kafka or Bull (with Redis) for better scalability, persistence, and retry support.
+- **Queue System**
+  async module's queue (https://caolan.github.io/async/v3/docs.html#queue) is used for handling multiple orders concurrently, but in production, we will use Kafka or Bull (with Redis) for better scalability, persistence, and retry support.
 
-- **SQLite Database:** SQLite is used for simplicity, but we’ll migrate to PostgreSQL or MySQL in production for better scalability and availability.
+- **SQLite Database**
+SQLite is used for simplicity, but we’ll migrate to PostgreSQL or MySQL in production for better scalability and availability.
 
-- **Error Handling:** The system returns a simple error response on failure. For example, if the queue fails to mark the order as completed, we simply return error. However, in a production scenario, we need to add retry mechanisms, exponential backoff, and dead-letter queues to deal with failed requests.
+- **Error Handling** 
+The system returns a simple error response on failure. For example, if the queue fails to mark the order as completed, we simply return error. However, in a production scenario, we need to add retry mechanisms, exponential backoff, and dead-letter queues to deal with failed requests.
 
-- **Load Test:** To test that the system can handle 1,000 concurrent orders, we have added a test `loadTest.js` that simulates creating 1000 orders all at once. To improve the load test, we need to introduce error handling and retries, measure performance metrics like response times, stagger requests to simulate gradual load, and add assertions to check order correctness. The best solution is to use a dedicated testing tools like Artillery and monitor system resources during the test to identify bottlenecks.
+- **Load Test** 
+To test that the system can handle 1,000 concurrent orders, we have added a test `loadTest.js` that simulates creating 1000 orders all at once. To improve the load test, we need to introduce error handling and retries, measure performance metrics like response times, stagger requests to simulate gradual load, and add assertions to check order correctness. The best solution is to use a dedicated testing tools like Artillery and monitor system resources during the test to identify bottlenecks.
 
-- **completed_at** An extra field `completed_at` was added in the `orders` schema to represent the time when the order is marked as `completed`. This makes the average processing time easier to calculate
+- **completed_at** 
+An extra field `completed_at` was added in the `orders` schema to represent the time when the order is marked as `completed`. This makes the average processing time easier to calculate
 
-- **order_id and user_id:** We should use UUIDs for `order_id` and `user_id` in production as UUIDs ensure global uniqueness, scalability, and better security by preventing ID collisions and making it harder to guess valid IDs.
+- **order_id and user_id** 
+We should use UUIDs for `order_id` and `user_id` in production as UUIDs ensure global uniqueness, scalability, and better security by preventing ID collisions and making it harder to guess valid IDs.
 
-- **security** In production, user_id should be passed in request headers, not request body, using session tokens or JWTs for better security.
+- **Security** 
+In production, user_id should be passed in request headers, not request body, using session tokens or JWTs for better security.
 
-- **logging** Using console.log for basic logging is acceptable for now, but in a production environment, more robust logging and monitoring solutions would be needed for better observability and debugging.
+- **Logging** 
+Using console.log for basic logging is acceptable for now, but in a production environment, more robust logging and monitoring solutions would be needed for better observability and debugging.
 
 
 
