@@ -122,7 +122,7 @@ Using console.log for basic logging is acceptable for now, but in a production e
 
 
 ## Assumptions
-- The transition of an order from "Pending" to "Completed" is assumed to take one second, but actual time may vary based on system load, database performance, external services, queue processing, network latency, and retries.
+- We are assuming the transition of an order's status set by the queue is only from "Pending" to "Completed" and is assumed to take one second. However, the actual time may vary based on system load, database performance, external services, queue processing, network latency, and retries. 
 
 - The async.queue concurrency is set to 10, assuming the system can handle 10 parallel orders efficiently. This limit may need to be tuned based on system performance tests.
 
